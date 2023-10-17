@@ -5,83 +5,43 @@
   <title>Santé à domicile</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-top: 50px;
-    }
-
-    .sensor-card {
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 700px;
-    }
-
-    .sensor-card i {
-      margin-right: 10px;
-      font-size: 24px;
-    }
-
-    .sensor-card .temperature {
-      color: red;
-    }
-    span{
-      color:red
-    }
-
-    .sensor-card .oxygen-level {
-      color: #3498db;
-    }
-
-    .sensor-card .blood-pressure {
-      color: #9b59b6;
-    }
-
-    .sensor-card .activity {
-      color: #2ecc71;
-    }
-
-    .sensor-card .heart-rate {
-      color: #f16b0b;
-    }
-
-    .sensor-card p {
-      margin: 10px 0;
-    }
-
-    /* Classe CSS personnalisée pour l'icône de la trousse médicale */
-    .medical-icon {
-      color: red;
-    }
+    /* Styles CSS */
   </style>
   <script>
-    // Code JavaScript pour actualiser les données toutes les 5 secondes
-    setInterval(function() {
-      fetch('/')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('data').innerHTML = data;
-        });
-    }, 5000);
-  </script>
-</head>
-<body>
-  <h1><i class="fas fa-medkit medical-icon"></i><span>Santé</span>  à domicile</h1>
-  <div id="data" class="sensor-card"></div>
+    // Code JavaScript
+    function updateSensorCard(card, value) {
+      var valueElement = card.querySelector('.sensor-value');
+      valueElement.innerText = value;
+    }
 
-  <script>
-    // Fonction pour ajouter une carte de capteur avec des données
+    document.addEventListener('DOMContentLoaded', function() {
+      var temperatureCard = document.createElement('div');
+      temperatureCard.classList.add('sensor-card');
+      addSensorCard('fa-thermometer-half', 'Température', '', 'temperature');
+      document.getElementById('data').appendChild(temperatureCard);
+
+      // Créez les autres cartes de capteur ici
+      // var oxygenLevelCard = ...
+      // var bloodPressureCard = ...
+      // var activityCard = ...
+      // var heartRateCard = ...
+
+      setInterval(function() {
+        fetch('/')
+          .then(response => response.text())
+          .then(data => {
+            var parsedData = JSON.parse(data);
+
+            updateSensorCard(temperatureCard, parsedData.temperature);
+            // Mettez à jour les autres cartes de capteur ici
+            // updateSensorCard(oxygenLevelCard, parsedData.oxygenLevel);
+            // updateSensorCard(bloodPressureCard, parsedData.bloodPressure);
+            // updateSensorCard(activityCard, parsedData.activity);
+            // updateSensorCard(heartRateCard, parsedData.heartRate);
+          });
+      }, 5000);
+    });
+
     function addSensorCard(iconClass, label, value, colorClass) {
       var card = document.createElement('div');
       card.classList.add('sensor-card');
@@ -95,18 +55,16 @@
       card.appendChild(labelElement);
 
       var valueElement = document.createElement('p');
+      valueElement.classList.add('sensor-value'); // Ajoutez une classe pour cibler cet élément plus tard
       valueElement.innerText = value;
       card.appendChild(valueElement);
 
       document.getElementById('data').appendChild(card);
     }
-
-    // Exemple d'utilisation de la fonction addSensorCard
-    addSensorCard('fa-thermometer-half', 'Température', '25.5 °C', 'temperature');
-    addSensorCard('fa-heartbeat', 'Niveau d\'oxygène dans le sang', '98%', 'oxygen-level');
-    addSensorCard('fa-tint', 'Pression artérielle', '120/80 mmHg', 'blood-pressure');
-    addSensorCard('fa-running', 'Activité physique', 'Marche', 'activity');
-    addSensorCard('fa-heart', 'Mouvement cardiaque', 'Normal', 'heart-rate');
   </script>
+</head>
+<body>
+  <h1><i class="fas fa-medkit medical-icon"></i><span>Santé</span>  à domicile</h1>
+  <div id="data" class="sensor-card"></div>
 </body>
 </html>
