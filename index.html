@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Capteurs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     /* Styles CSS pour les cartes de capteurs */
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .sensor-card {
@@ -18,6 +26,8 @@
       display: flex;
       align-items: center;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
     }
 
     .sensor-card h2 {
@@ -25,14 +35,16 @@
       display: flex;
       align-items: center;
     }
+
     .sensor-card h2 button {
-      border-radius: 60px;
+      border-radius: 90px;
       border-color: #2196F3;
       display: flex;
       margin-left: 60px;
+      padding: 20px;
       background-color: #2196F3;
-      
     }
+
     .sensor-card h2 button a {
       color: white;
       text-decoration: none;
@@ -73,51 +85,53 @@
     }
 
     .container {
-      max-width: 800px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 1200px;
       padding: 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       grid-gap: 20px;
     }
-    h1 i {
-      color : red;
-    }
+
     h1 {
-      text-align: center;
-    
+      margin-top: 50px;
       font-size: 32px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
   </style>
 </head>
 <body>
-  <h1><i class="fas fa-home"></i> Santé <span>à</span> domicile</h1>
+  <h1><i style="color: red;" class="fas fa-home"></i> Santé <span>à</span> domicile</h1>
 
   <div class="container">
     <div class="sensor-card" id="temperature-card">
       <h2><i class="fas fa-thermometer temperature-icon"></i> Température</h2>
       <p id="temperature-value">-</p>
+      
     </div>
 
     <div class="sensor-card" id="oxygen-level-card">
       <h2><i class="fas fa-lungs oxygen-level-icon"></i> Niveau d'oxygène</h2>
       <p id="oxygen-level-value">-</p>
+      
     </div>
 
     <div class="sensor-card" id="blood-pressure-card">
       <h2><i class="fas fa-heartbeat blood-pressure-icon"></i> Pression artérielle</h2>
       <p id="blood-pressure-value">-</p>
+      
     </div>
 
     <div class="sensor-card" id="activity-card">
       <h2><i class="fas fa-walking activity-icon"></i> Activité</h2>
       <p id="activity-value">-</p>
+      
     </div>
 
     <div class="sensor-card" id="heart-rate-card">
       <h2><i class="fas fa-heart heart-rate-icon"></i> Rythme cardiaque</h2>
       <p id="heart-rate-value">-</p>
+      
     </div>
 
     <div class="sensor-card" id="soins-card">
@@ -130,39 +144,29 @@
 
   <script>
     // Fonction pour mettre à jour les valeurs des cartes de capteurs
-    function updatesensorCard(cardId, value) {
+    function updateSensorCard(cardId, value) {
       const cardElement = document.getElementById(cardId);
       const valueElement = cardElement.querySelector('p');
       valueElement.textContent = value;
     }
 
-    // Fonction pour traiter les données des capteurs reçues via une requête POST
-    function processSensorData(data) {
-      updateSensorCard('temperature-card', data.temperature + ' °C');
-      updateSensorCard('oxygen-level-card', data.oxygenLevel + '%');
-      updateSensorCard('blood-pressure-card', data.pressure + ' mmHg');
-      updateSensorCard('activity-card', 'Marche');
-      updateSensorCard('heart-rate-card', 'Normal');
+    // Fonction pour mettre à jour les valeurs des capteurs (exemple)
+    function simulateSensorData() {
+      const temperatureValue = Math.random() * 100;
+      const oxygenLevelValue = Math.random() * 100;
+      const bloodPressureValue = Math.random() * 100;
+      const activityValue = Math.random() * 100;
+      const heartRateValue = Math.random() * 100;
+
+      updateSensorCard("temperature-card", temperatureValue.toFixed(2) + " °C");
+      updateSensorCard("oxygen-level-card", oxygenLevelValue.toFixed(2) + " %");
+      updateSensorCard("blood-pressure-card", bloodPressureValue.toFixed(2) + " mmHg");
+      updateSensorCard("activity-card", activityValue.toFixed(2) + " %");
+      updateSensorCard("heart-rate-card", heartRateValue.toFixed(2) + " bpm");
     }
 
-    // Boucle principale pour effectuer une requête POST périodique et recevoir les données des capteurs
-    setInterval(function() {
-      fetch('https://medard-mak.github.io/sante/update.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          temperature: 25.5,
-          oxygenLevel: 98,
-          pressure: '120/80'
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        processSensorData(data);
-      });
-    }, 5000);
+    // Simuler les données des capteurs toutes les 3 secondes
+    setInterval(simulateSensorData, 3000);
   </script>
 </body>
 </html>
